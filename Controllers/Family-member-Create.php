@@ -1,5 +1,5 @@
 <?php 
-require_once($_SERVER['DOCUMENT_ROOT'].'/TEMP/config.php');
+require_once($_SERVER['DOCUMENT_ROOT'].'/Saamj_seva/config.php');
 $response = array();
 $error = array();
 if (empty($_POST["Firstname"])) {

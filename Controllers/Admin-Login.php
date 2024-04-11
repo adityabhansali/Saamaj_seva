@@ -1,5 +1,9 @@
-<?php 
-require_once($_SERVER['DOCUMENT_ROOT'].'/TEMP/config.php');
+<?php
+//Error Reporting
+ini_set('error_reporting',1);
+ini_set('display_errors', 1);
+error_reporting(E_ALL);
+require_once($_SERVER['DOCUMENT_ROOT'].'/Saamj_seva/config.php');
 $response = array();
 $error = array();
 if (empty($_POST["email"])) {

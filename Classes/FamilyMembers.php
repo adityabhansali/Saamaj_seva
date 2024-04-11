@@ -1,5 +1,5 @@
 <?php 
-require_once($_SERVER['DOCUMENT_ROOT'].'/TEMP/config.php');
+require_once($_SERVER['DOCUMENT_ROOT'].'/Saamj_seva/config.php');
 class FamilyMembers{
     public $Firstname;
     public $Middlename;
@@ -95,7 +95,7 @@ class FamilyMembers{
     }
     public function fetchUserlist() {
         $db = new db();
-        $CheckUserquery = $db->prepare("SELECT * FROM users");
+        $CheckUserquery = $db->prepare("SELECT * FROM FamilyMembers");
         $CheckUserquery->execute();
         $result= $CheckUserquery->fetchAll();
         return json_encode($result);
@@ -103,11 +103,11 @@ class FamilyMembers{
     public function DeleteUser($id){
         $db = new db();
         try {
-            $CheckUserquery = $db->prepare("SELECT `id` FROM users WHERE `id`=:id");
+            $CheckUserquery = $db->prepare("SELECT `id` FROM FamilyMembers WHERE `id`=:id");
             $CheckUserquery->bindValue(':id', $id, PDO::PARAM_INT);
             $CheckUserquery->execute();
             if($CheckUserquery->rowCount() == 1){
-                $DeleteUserquery = $db->prepare("DELETE FROM users WHERE `id`=:id");
+                $DeleteUserquery = $db->prepare("DELETE FROM FamilyMembers WHERE `id`=:id");
                 $DeleteUserquery->bindValue(':id', $id, PDO::PARAM_INT);
                 $DeleteUserquery->execute();
                 return json_encode(array(

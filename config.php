@@ -26,8 +26,8 @@ define('DB_USER', $env_vars['DB_USER']);
 define('DB_PASSWORD', $env_vars['DB_PASSWORD']);
 define('DB_DATABASE', $env_vars['DB_NAME']);
 define('Admin_EMAIL', $env_vars['Admin_EMAIL']);
-define("APPURL","http://localhost/temp/");
-define("AdminURL","http://localhost/temp/Views/Admin/");
+define("APPURL","http://localhost/Saamj_seva/");
+define("AdminURL","http://localhost/Saamj_seva/Views/admin/");
 define("Controllers",APPURL."Controllers/");
 define("Classes",APPURL."Classes/");
 //define('LOGIN_URL', 'login.php');
@@ -90,6 +90,5 @@ function parse_env_file($file_path) {
         list($key, $value) = explode('=', $line, 2);
         $env_variables[$key] = $value;
     }
-
     return $env_variables;
 }

@@ -1,5 +1,5 @@
-<?php 
-require_once($_SERVER['DOCUMENT_ROOT'].'/TEMP/config.php');
+<?php
+require_once($_SERVER['DOCUMENT_ROOT'].'/Saamj_seva/config.php');
 class Auth{
     public $email;
     public $password;

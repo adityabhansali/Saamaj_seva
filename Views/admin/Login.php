@@ -1,7 +1,7 @@
 <?php
 //echo "<pre>";print_r($_SERVER);echo"</pre>";
-require_once($_SERVER['DOCUMENT_ROOT'].'/TEMP/config.php');
-require_once('header.php');
+require_once($_SERVER['DOCUMENT_ROOT'].'/Saamj_seva/config.php');
+require_once('Header.php');
 ?>
 <div class="login-box">
   <div class="login-logo">
@@ -92,5 +92,5 @@ require_once('header.php');
     });
 </script>
 <?php 
-require_once('footer.php');
+require_once('Footer.php');
 ?>
