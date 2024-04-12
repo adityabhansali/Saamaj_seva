@@ -1,6 +1,7 @@
 <!-- jQuery -->
 <script src="<?= AdminURL?>assets/js/jquery-3.1.1.js"></script>
 <script src="<?= AdminURL?>assets/plugins/jqueryValidate/jquery.validate.js"></script>
+<script src="<?= AdminURL?>assets/plugins/jquery-validation/additional-methods.js"></script>
 <link rel="stylesheet" href="<?= AdminURL?>assets/plugins/sweetalert2-theme-bootstrap-4/bootstrap-4.min.css">
 <script src="<?= AdminURL?>assets/plugins/sweetalert2/sweetalert2.min.js"></script>
 <script>
@@ -62,5 +63,6 @@
 <script src="<?= AdminURL?>assets/plugins/select2/js/select2.full.min.js"></script>
 <script>
   $('.select2').select2();
+
 </script>
 

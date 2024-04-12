@@ -100,6 +100,14 @@ class FamilyMembers{
         $result= $CheckUserquery->fetchAll();
         return json_encode($result);
     }
+    public function fetchFamilyListByNumber($id) {
+        $db = new db();
+        $CheckUserquery = $db->prepare("SELECT * FROM FamilyMembers Where `FamilyNumber` =:id order by `ID`");
+        $CheckUserquery->bindValue(':id', $id, PDO::PARAM_INT);
+        $CheckUserquery->execute();
+        $result= $CheckUserquery->fetchAll();
+        return json_encode($result);
+    }
     public function DeleteUser($id){
         $db = new db();
         try {
@@ -124,6 +132,72 @@ class FamilyMembers{
             return json_encode(array(
                 "Status" => "Failed",
             ));
+            exit;
+        }
+    }
+    public function CreateFamilyUser($data){
+
+        $db = new db();
+        try {
+            $getadminid = $db->queryFetchAllAssoc('SELECT `id` FROM FamilyMembers where `Email` = "'.$_SESSION['Email'].'"LIMIT 1')[0]['id'];
+            $getlastfamilyid = $db->queryFetchAllAssoc("SELECT `FamilyNumber` FROM FamilyMembers ORDER BY `id` DESC LIMIT 1");
+            $CheckUserquery = $db->prepare("SELECT `Email` FROM FamilyMembers WHERE `Email`=:Email");
+            $CheckUserquery->bindValue(':Email', $data['Email'], PDO::PARAM_STR);
+            $CheckUserquery->execute();
+            if($CheckUserquery->rowCount() == 0){
+                if(!isset($data['RelationToHead']))
+                {
+                    $getlastfamilyid[0]['FamilyNumber']++;
+                    $data['RelationToHead'] = 'own';
+                }
+                $CreateUserquery = $db->prepare("INSERT INTO FamilyMembers (`FamilyNumber`, `Firstname`, `Middlename`, `Lastname`, `Mobilenumber`, `Email`, `Password`, `DOB`, `Gender`, `Address`, `Education`, `Business`, `BloudGroup`, `MaritalStatus`, `Age`, `Photo`, `RelationWithHead`, `CreatedTFK`) VALUES (:FamilyNumber, :Firstname, :Middlename, :Lastname, :Mobilenumber, :Email, :Password, :DOB, :Gender, :Address, :Education, :Business, :BloudGroup, :MaritalStatus, :Age, :Photo, :RelationWithHead, :CreatedTFK)");
+                //for integer $query->bindValue(':description', $this->description, PDO::PARAM_INT);
+                $imageName = basename($data["Photo"]["name"]);
+                $cleanImageName = str_replace(' ', '', $imageName);
+                $imageName =time(). '_' . $cleanImageName;
+                $uploadFile = UPLOAD_DIR . $imageName;
+                if (!move_uploaded_file($data["Photo"]["tmp_name"], $uploadFile)) {
+                    return json_encode(array(
+                        "Status" => "Failed",
+                        "Message"=>"Upload File Failed"
+                    ));
+                }
+                $CreateUserquery->bindValue(':FamilyNumber', $getlastfamilyid[0]['FamilyNumber'], PDO::PARAM_INT);
+                $CreateUserquery->bindValue(':Firstname', $data['Firstname'], PDO::PARAM_STR);
+                $CreateUserquery->bindValue(':Middlename', $data['Middlename'], PDO::PARAM_STR);
+                $CreateUserquery->bindValue(':Lastname', $data['Lastname'], PDO::PARAM_STR);
+                $CreateUserquery->bindValue(':Mobilenumber', $data['Mobilenumber'], PDO::PARAM_STR);
+                $CreateUserquery->bindValue(':Email', $data['Email'], PDO::PARAM_STR);
+                $CreateUserquery->bindValue(':Password', "PASSWORD", PDO::PARAM_STR);
+                $CreateUserquery->bindValue(':DOB', DateTime::createFromFormat('d/m/Y', $data['DOB'])->format("Y-m-d"), PDO::PARAM_STR);
+                $CreateUserquery->bindValue(':Gender', $data['Gender'], PDO::PARAM_STR);
+                $CreateUserquery->bindValue(':Address', $data['Address'], PDO::PARAM_STR);
+                $CreateUserquery->bindValue(':Education', $data['Education'], PDO::PARAM_STR);
+                $CreateUserquery->bindValue(':Business', $data['Business'], PDO::PARAM_STR);
+                $CreateUserquery->bindValue(':BloudGroup', $data['BloudGroup'], PDO::PARAM_STR);
+                $CreateUserquery->bindValue(':MaritalStatus', $data['MaritalStatus'], PDO::PARAM_STR);
+                $CreateUserquery->bindValue(':Age', $data['Age'], PDO::PARAM_STR);
+                $CreateUserquery->bindValue(':Photo', $imageName, PDO::PARAM_STR);
+                $CreateUserquery->bindValue(':RelationWithHead', $data['RelationToHead'], PDO::PARAM_STR);
+                $CreateUserquery->bindValue(':CreatedTFK', $getadminid, PDO::PARAM_INT);
+                $CreateUserquery->execute();
+                return json_encode(array(
+                    "Status" => "Passed",
+                    "Message"=>"User created successfully."
+                ));
+            }else{
+                return json_encode(array(
+                    "Status" => "Failed",
+                    "Message"=>"Email already exist. Please try with another email"
+                ));
+            }
+        } catch (PDOException $e) {
+            return json_encode(array(
+                "Status" => "Failed",
+                "Message"=>$e->getMessage()
+            ));
+            //"Message"=>$query->queryString
+            //logError($e->getMessage(), $query->queryString, __FILE__, __LINE__);
             exit;
         }
     }

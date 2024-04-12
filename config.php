@@ -28,6 +28,7 @@ define('DB_DATABASE', $env_vars['DB_NAME']);
 define('Admin_EMAIL', $env_vars['Admin_EMAIL']);
 define("APPURL","http://localhost/Saamj_seva/");
 define("AdminURL","http://localhost/Saamj_seva/Views/admin/");
+define("UPLOAD_DIR",$_SERVER['DOCUMENT_ROOT'].'/Saamj_seva/Assets/Photos/');
 define("Controllers",APPURL."Controllers/");
 define("Classes",APPURL."Classes/");
 //define('LOGIN_URL', 'login.php');
