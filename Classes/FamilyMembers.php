@@ -320,7 +320,7 @@ class FamilyMembers{
                 $CreateUserquery->bindValue(':Age', $data['Age'], PDO::PARAM_STR);
                 $CreateUserquery->bindValue(':Photo', $imageName, PDO::PARAM_STR);
                 $CreateUserquery->bindValue(':RelationWithHead', $data['RelationToHead'], PDO::PARAM_STR);
-                $CreateUserquery->bindValue(':CreatedTFK', $getadminid, PDO::PARAM_INT);
+                $CreateUserquery->bindValue(':UpdatedTFK', $getadminid, PDO::PARAM_INT);
                 $CreateUserquery->execute();
                 return json_encode(array(
                     "Status" => "Passed",

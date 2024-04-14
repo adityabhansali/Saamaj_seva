@@ -31,11 +31,12 @@ require_once('Header.php');
                     <div class="col-12">
 
                         <div class="card">
-                            <div class="card-header">
-                                <h3 class="card-title">DataTable with default features</h3>
-                                <a href="<?= AdminURL ?>FamilyMember-create.php">Add New Family Member</a>
-                                <button id="generatePdfBtn">Generate PDF</button>
-                                <div class="dynamic-content">
+                            <div class="card-header d-flex justify-content-between align-items-center">
+                                <h3 class="card-title">Family Details</h3>
+                                <span><a class="btn btn-primary" href="<?= AdminURL ?>FamilyMember-create.php">Add New Family Member</a>
+                                <button class="btn btn-primary" id="generatePdfBtn">Generate PDF</button>
+                                <button class="btn btn-primary" id="generateCSVBtn">Generate CSV</button></span>
+                                <div class="dynamic-content d-none">
                                     <!-- This container will hold the dynamically generated content -->
                                 </div>
                             </div>
@@ -138,7 +139,26 @@ require_once('Header.php');
                         }
                     }],
             });
-
+            $('#generateCSVBtn').on('click', function() {
+                var rowsData = familytable.rows().data();
+                var csvContent = "data:text/csv;charset=utf-8,";
+                var header = Object.keys(familytable.rows().data()[0]).filter(key => !/^\d+$/.test(key));
+                csvContent += header.join(",") + "\r\n";
+                rowsData.each(function(rowArray) {
+                    var rowValues = Object.values(rowArray).filter((_, index) => index >= header.length);
+                    var row = rowValues.map(function(value) {
+                        return value === null ? '' : value.toString();
+                    }).join(",");
+                    csvContent += row + "\r\n";
+                });
+                var encodedUri = encodeURI(csvContent);
+                var link = document.createElement("a");
+                link.setAttribute("href", encodedUri);
+                link.setAttribute("download", "data.csv");
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+            });
             $('#generatePdfBtn').on('click', function() {
                 var counter = 1;
                 var $container = $('<div>').addClass('dynamic-content');
