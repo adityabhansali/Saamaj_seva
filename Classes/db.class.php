@@ -1,5 +1,5 @@
 <?php
-require_once($_SERVER['DOCUMENT_ROOT'].'/Saamj_seva/config.php');
+require_once($_SERVER['DOCUMENT_ROOT'].'/SocietyManagement/config.php');
 //require_once('/home/cloud9shield/public_html/customer/view/header.php');
 /**
  * PDO SINGLETON CLASS

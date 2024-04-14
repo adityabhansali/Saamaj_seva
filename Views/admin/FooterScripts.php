@@ -4,7 +4,18 @@
 <script src="<?= AdminURL?>assets/plugins/jquery-validation/additional-methods.js"></script>
 <link rel="stylesheet" href="<?= AdminURL?>assets/plugins/sweetalert2-theme-bootstrap-4/bootstrap-4.min.css">
 <script src="<?= AdminURL?>assets/plugins/sweetalert2/sweetalert2.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/1.4.1/jspdf.debug.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/2.3.4/jspdf.plugin.autotable.min.js"></script>
 <script>
+    if(!$('body').hasClass("session-set"))
+    {
+        var path = window.location.pathname.split("/");
+        console.log();
+        if(path[path.length-1] !== "Login.php")
+        {
+            window.location.href="Login.php";
+        }
+    }
     var Toast = Swal.mixin({
       toast: true,
       position: 'top-end',
@@ -63,6 +74,6 @@
 <script src="<?= AdminURL?>assets/plugins/select2/js/select2.full.min.js"></script>
 <script>
   $('.select2').select2();
-
+  // import { jsPDF } from "jspdf";
 </script>
 

@@ -1,4 +1,6 @@
 <?php
+//phpinfo();
+//die;
 //Error Reporting 
 ini_set('error_reporting',1);
 ini_set('display_errors', 1);
@@ -26,9 +28,9 @@ define('DB_USER', $env_vars['DB_USER']);
 define('DB_PASSWORD', $env_vars['DB_PASSWORD']);
 define('DB_DATABASE', $env_vars['DB_NAME']);
 define('Admin_EMAIL', $env_vars['Admin_EMAIL']);
-define("APPURL","http://localhost/Saamj_seva/");
-define("AdminURL","http://localhost/Saamj_seva/Views/admin/");
-define("UPLOAD_DIR",$_SERVER['DOCUMENT_ROOT'].'/Saamj_seva/Assets/Photos/');
+define("APPURL","http://localhost/SocietyManagement/");
+define("AdminURL","http://localhost/SocietyManagement/Views/admin/");
+define("UPLOAD_DIR",$_SERVER['DOCUMENT_ROOT'].'/SocietyManagement/Assets/Photos/');
 define("Controllers",APPURL."Controllers/");
 define("Classes",APPURL."Classes/");
 //define('LOGIN_URL', 'login.php');
@@ -36,6 +38,9 @@ define("CSSPath","");
 define("ScriptPath","");
 define("MediaPath","");
 $db = new db();
+
+//autoload vendor files
+require $_SERVER['DOCUMENT_ROOT'].'/SocietyManagement/vendor/dompdf/autoload.inc.php';
 checkAuthorization();
 
 

@@ -1,6 +1,6 @@
 <?php
 //echo "<pre>";print_r($_SERVER);echo"</pre>";
-require_once($_SERVER['DOCUMENT_ROOT'] . '/Saamj_seva/config.php');
+require_once($_SERVER['DOCUMENT_ROOT'] . '/SocietyManagement/config.php');
 require_once('Header.php');
 ?>
 <div class="wrapper">
@@ -32,8 +32,12 @@ require_once('Header.php');
 
                         <div class="card">
                             <div class="card-header">
-                                <h3 class="card-title">DataTable with default features</h3>  <a
-                                        href="<?= AdminURL ?>FamilyMember-create.php">Add New Family Member</a>
+                                <h3 class="card-title">DataTable with default features</h3>
+                                <a href="<?= AdminURL ?>FamilyMember-create.php">Add New Family Member</a>
+                                <button id="generatePdfBtn">Generate PDF</button>
+                                <div class="dynamic-content">
+                                    <!-- This container will hold the dynamically generated content -->
+                                </div>
                             </div>
                             <!-- /.card-header -->
                             <div class="card-body">
@@ -70,30 +74,29 @@ require_once('Header.php');
             </div>
         </div>
     </div>
-    <div class="model-card d-none" id="modalCardTemplate"
-         style="background-color: #f8f9fa; border: 1px solid #dee2e6; border-radius: 5px; padding: 15px; margin-bottom: 15px;">
-        <h4 class="text-navy title" style="margin-bottom: 10px;margin-left: 60px;font-weight: 600;">Head of Family</h4>
+    <div class="model-card d-none" id="modalCardTemplate" style="background-color: #f8f9fa; border: 1px solid #dee2e6; border-radius: 5px; padding: 15px; margin-bottom: 15px;">
+        <h4 class="text-navy title" style="margin-bottom: 10px; font-weight: 600;">Head of Family</h4>
         <div class="d-flex justify-content-around align-items-start">
-            <img src="<?php echo APPURL ?>Assets/Photos/1712956010_LinuxVsWindowsWallpaper.jpg" alt="Model Image"
-                 width="200px" class="model-image" style="border-radius: 5px;">
+            <img class="model-image" style="border-radius: 5px;max-width: 350px;max-height: 300px;">
             <div class="model-details pl-3">
-                <p class="text-bold fullname" style="font-size: 18px;">Krushkant Navinchndra Pachchigar</p>
+                <p class="text-bold fullname" style="font-size: 18px;"></p>
                 <p class="text-primary">Basic Information</p>
                 <hr class="text-primary" style="border-color: #007bff;">
-                <p><strong>Education:</strong> Lorem Ipsam</p>
-                <p><strong>Business/Job:</strong> Lorem Ipsam</p>
-                <p><strong>Blood Group:</strong> A+</p>
-                <p><strong>Marital Status:</strong> Married</p>
-                <p><strong>Birth Date:</strong> 31st May, 1995</p>
-                <p><strong>Gender:</strong> Male</p>
+                <p><strong class="education-label">Education:</strong> <span class="education"></span></p>
+                <p><strong class="business-label">Business/Job:</strong> <span class="business"></span></p>
+                <p><strong class="bloodGroup-label">Blood Group:</strong> <span class="bloodGroup"></span></p>
+                <p><strong class="maritalStatus-label">Marital Status:</strong> <span class="maritalStatus"></span></p>
+                <p><strong class="birthDate-label">Birth Date:</strong> <span class="birthDate"></span></p>
+                <p><strong class="gender-label">Gender:</strong> <span class="gender"></span></p>
             </div>
         </div>
-        <p><strong>Phone:</strong> +91 74125 89632</p>
-        <p class="email"><strong>Email-Id:</strong> XYZ@gmail.com</p>
+        <p><strong class="phone-label">Phone:</strong> <span class="phone"></span></p>
+        <p><strong class="email-label">Email-Id:</strong> <span class="email"></span></p>
     </div>
     <?php require_once 'FooterScripts.php' ?>
     <script>
         $(document).ready(function () {
+
             var familytable = $("#example1").DataTable({
                 "responsive": true,
                 "lengthChange": false,
@@ -130,11 +133,74 @@ require_once('Header.php');
                         "data": null,
                         "render": function (data, type, full, meta) {
                             return '<a href="#" class="view text-dark" data-id="' + full.FamilyNumber + '">View</a>  &nbsp' +
-                                '<a href="#" class="edit" data-id="' + full.ID + '">Edit</a>  &nbsp' +
+                                '<a href="#" class="edit" data-id="' + full.FamilyNumber + '">Edit</a>  &nbsp' +
                                 '<a href="#" class="delete text-danger" data-id="' + full.ID + '">Delete</a>';
                         }
-                    }]
+                    }],
             });
+
+            $('#generatePdfBtn').on('click', function() {
+                var counter = 1;
+                var $container = $('<div>').addClass('dynamic-content');
+                var rowsData = familytable.rows().data();
+                var $row = null; // Initialize row variable
+
+                rowsData.each(function(rowData, index) {
+                    if (index % 6 === 0) {
+                        // Create a new row after every 6 columns
+                        $row = $('<div>').addClass('row').css({"margin": "10px","display":"flex","justify-content":"space-around"});
+                        $container.append($row);
+                    }
+
+                    var familyNumber = rowData['FamilyNumber'];
+                    var firstName = rowData['Firstname'];
+                    var middleName = rowData['Middlename'];
+                    var lastName = rowData['Lastname'];
+                    var address = rowData['Address'];
+                    var phoneNumber = rowData['Mobilenumber'];
+                    var $col = $('<div>').addClass('col-md-2').css({'padding': '20px', 'background-color': '#f9f9f9', 'border': '1px solid #ddd', 'font-size': '12px', 'margin': '0'});
+
+                    $col.append(
+                        $('<p>').addClass('m-0').append($('<strong>').addClass('bold-text').text(counter++ + ". " + firstName + ' ' + middleName + ' ' + lastName)),
+                        $('<p>').addClass('m-0').text(address),
+                        $('<p>').addClass('m-0').append($('<strong>').addClass('bold-text').text(phoneNumber))
+                    );
+
+                    $row.append($col);
+                });
+
+                $container.css({
+                    'font-family': 'Arial, sans-serif',
+                    'margin': '0',
+                    'padding': '0'
+                });
+                var html = $container.html();
+                // console.log(html);
+                $.ajax({
+                    url: "<?php echo Controllers; ?>generate-pdf.php",
+                    method: 'POST',
+                    data: {html: html},
+                    success: function (response) {
+                        var responseData = JSON.parse(response);
+                        if (responseData && responseData.pdf_location) {
+                            var downloadLink = document.createElement('a');
+                            downloadLink.href = responseData.pdf_location;
+                            downloadLink.download = 'generated_pdf.pdf';
+                            document.body.appendChild(downloadLink);
+                            downloadLink.click();
+                            document.body.removeChild(downloadLink);
+                        } else {
+                            console.error("PDF location not found in response");
+                        }
+                    },
+                    error: function (xhr, status, error) {
+                        console.error("Error deleting data:", error);
+                    }
+                });
+
+            });
+
+
             $('#example2').DataTable({
                 "paging": true,
                 "lengthChange": false,
@@ -143,6 +209,7 @@ require_once('Header.php');
                 "info": true,
                 "autoWidth": false,
                 "responsive": true,
+
             });
             $('#example1').on('change', '#selectAll', function () {
                 $('.select-checkbox').prop('checked', $(this).prop('checked'));
@@ -204,27 +271,29 @@ require_once('Header.php');
                                 $template.find('.title').text(title);
                                 $template.find('.fullname').text(value.Firstname + ' ' + value.Middlename + ' ' + value.Lastname);
                                 $template.find('.model-image').attr('src', '<?php echo APPURL ?>Assets/Photos/' + value.Photo);
-                                $template.find('.model-details').html(
-                                    '<p class="text-primary">Basic Information</p>' +
-                                    '<hr class="text-primary">' +
-                                    '<p><strong>Education:</strong> ' + value.Education + '</p>' +
-                                    '<p><strong>Business/Job:</strong> ' + value.Business + '</p>' +
-                                    '<p><strong>Blood Group:</strong> ' + value.BloudGroup + '</p>' +
-                                    '<p><strong>Marital Status:</strong> ' + value.MaritalStatus + '</p>' +
-                                    '<p><strong>Birth Date:</strong> ' + moment(value.DOB).format('Do MMMM YYYY') + '</p>' +
-                                '<p><strong>Gender:</strong> ' + value.Gender + '</p>'
-                                );
-                                $template.find('p:eq(8)').text('Phone: ' + value.Mobilenumber);
-                                $template.find('.email').html('<strong>Email-Id:</strong> ' + value.Email);
-                                htmlContent += $template.html();
+                                $template.find('.education-label').text('Education:');
+                                $template.find('.education').text(value.Education);
+                                $template.find('.business-label').text('Business/Job:');
+                                $template.find('.business').text(value.Business);
+                                $template.find('.bloodGroup-label').text('Blood Group:');
+                                $template.find('.bloodGroup').text(value.BloudGroup);
+                                $template.find('.maritalStatus-label').text('Marital Status:');
+                                $template.find('.maritalStatus').text(value.MaritalStatus);
+                                $template.find('.birthDate-label').text('Birth Date:');
+                                $template.find('.birthDate').text(moment(value.DOB).format('Do MMMM YYYY'));
+                                $template.find('.gender-label').text('Gender:');
+                                $template.find('.gender').text(value.Gender);
+                                $template.find('.phone-label').text('Phone:');
+                                $template.find('.phone').text(value.Mobilenumber);
+                                $template.find('.email-label').text('Email-Id:');
+                                $template.find('.email').text(value.Email);
+                                htmlContent += $template.prop('outerHTML');
                             });
-                            $('#viewFamilyDetailsModalBody').empty();
-                            $('#viewFamilyDetailsModalBody').html(htmlContent);
+                            $('#viewFamilyDetailsModalBody').empty().html(htmlContent);
                         }
                         $('#viewFamilyDetailsModal').modal('show');
                     },
                     error: function (xhr, status, error) {
-                        // Handle error response
                         console.error("Error deleting data:", error);
                     }
                 });
@@ -236,6 +305,7 @@ require_once('Header.php');
             $('#example1').on('click', '.edit', function (e) {
                 e.preventDefault();
                 var id = $(this).data('id');
+                window.location.href = "FamilyMember-edit.php?id="+id;
                 console.log("EDIT ID:", id);
             });
         });

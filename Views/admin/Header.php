@@ -45,12 +45,15 @@
   
   <!--  -->
 </head>
-<?php 
+<?php
 $current_page = basename($_SERVER['PHP_SELF']);
 if($current_page == "Login.php"){
     echo '<body class="hold-transition login-page">';
 }else{
-    echo '<body class="hold-transition sidebar-mini layout-fixed">';
+    echo '<body class="hold-transition sidebar-mini layout-fixed ';
+    echo (@$_SESSION['loggedin'])?"session-set":"session-not-set";
+    echo '">';
 }
+//print_r($_SESSION);
+//die;
 ?>
-
